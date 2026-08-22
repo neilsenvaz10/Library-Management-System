@@ -1,0 +1,33 @@
+services:
+  backend1:
+    build: .
+    command: python backend.py
+    environment:
+      - SERVER_NAME=Server 1 (Fast)
+      - DELAY=0.05
+
+  backend2:
+    build: .
+    command: python backend.py
+    environment:
+      - SERVER_NAME=Server 2 (Slow)
+      - DELAY=0.40
+
+  backend3:
+    build: .
+    command: python backend.py
+    environment:
+      - SERVER_NAME=Server 3 (Medium)
+      - DELAY=0.15
+
+  load_balancer:
+    build: .
+    command: python load_balancer.py
+    ports:
+      - "8000:8000"
+    environment:
+      - MODE=least_conn
+    depends_on:
+      - backend1
+      - backend2
+      - backend3
